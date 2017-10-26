@@ -34,7 +34,7 @@ def load_vgg(sess, vgg_path):
     vgg_layer7_out_tensor_name = 'layer7_out:0'
 
     # load graph from files
-    tf.save_model.loader.load(sess, [vgg_tag], vgg_tag)
+    tf.saved_model.loader.load(sess, [vgg_tag], vgg_path)
     graph = tf.get_default_graph()
     image_input = graph.get_tensor_by_name(vgg_input_tensor_name)
     keep_prob = graph.get_tensor_by_name(vgg_keep_prob_tensor_name)
@@ -104,10 +104,10 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     labels = tf.reshape(correct_label, (-1, num_classes))
 
     cross_entropy_loss = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(logits, labels))
+        tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
 
-    optimizer = tf.train.AdamOptimizer(learning_rate, beta1=0.9, beta2=0.99,
-                                       epsilon=1e-08, using_locking=False,
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate, beta1=0.9, beta2=0.99,
+                                       epsilon=1e-08, use_locking=False,
                                        name='Adam')
 
     train_op = optimizer.minimize(loss=cross_entropy_loss)
