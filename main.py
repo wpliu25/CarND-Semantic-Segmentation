@@ -36,13 +36,13 @@ def load_vgg(sess, vgg_path):
     # load graph from files
     tf.save_model.loader.load(sess, [vgg_tag], vgg_tag)
     graph = tf.get_default_graph()
-    w1 = graph.get_tensor_by_name(vgg_input_tensor_name)
-    keep = graph.get_tensor_by_name(vgg_keep_prob_tensor_name)
+    image_input = graph.get_tensor_by_name(vgg_input_tensor_name)
+    keep_prob = graph.get_tensor_by_name(vgg_keep_prob_tensor_name)
     vgg_layer3_out = graph.get_tensor_by_name(vgg_layer3_out_tensor_name)
     vgg_layer4_out = graph.get_tensor_by_name(vgg_layer4_out_tensor_name)
     vgg_layer7_out = graph.get_tensor_by_name(vgg_layer7_out_tensor_name)
 
-    return w1, keep, vgg_layer3_out, vgg_layer4_out, vgg_layer7_out
+    return image_input, keep_prob, vgg_layer3_out, vgg_layer4_out, vgg_layer7_out
 tests.test_load_vgg(load_vgg, tf)
 
 
@@ -57,17 +57,36 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     """
     # TODO: Implement function
     # 1x1 conv, padding same
-    conv_1x1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1,
+    layer7_conv_1x1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1,
+                                padding='same',
+                                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+
+    layer4_conv_1x1 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1,
+                                padding='same',
+                                kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+
+    layer3_conv_1x1 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1,
                                 padding='same',
                                 kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     #  decov: transpose, upsamples by 2
-    output = tf.layers.conv2d_transpose(conv_1x1, num_classes, 4, 2,
+    layer7_upsample = tf.layers.conv2d_transpose(layer7_conv_1x1, num_classes,
+                                              4, 2,
+                                        padding='same',
+                                        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    tf.add(layer7_upsample, layer4_conv_1x1)
+    layer4_upsample = tf.layers.conv2d_transpose(layer4_conv_1x1, num_classes,
+                                              4, 2,
+                                        padding='same',
+                                        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
+    tf.add(layer4_upsample, layer3_conv_1x1)
+    layer3_upsample = tf.layers.conv2d_transpose(layer3_conv_1x1, num_classes,
+                                              4, 2,
                                         padding='same',
                                         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
 
-    return None
+    return layer3_upsample
 tests.test_layers(layers)
 
 
@@ -81,7 +100,19 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     :return: Tuple of (logits, train_op, cross_entropy_loss)
     """
     # TODO: Implement function
-    return None, None, None
+    logits = tf.reshape(nn_last_layer, (-1, num_classes))
+    labels = tf.reshape(correct_label, (-1, num_classes))
+
+    cross_entropy_loss = tf.reduce_mean(
+        tf.nn.softmax_cross_entropy_with_logits(logits, labels))
+
+    optimizer = tf.train.AdamOptimizer(learning_rate, beta1=0.9, beta2=0.99,
+                                       epsilon=1e-08, using_locking=False,
+                                       name='Adam')
+
+    train_op = optimizer.minimize(loss=cross_entropy_loss)
+
+    return logits, train_op, cross_entropy_loss
 tests.test_optimize(optimize)
 
 
