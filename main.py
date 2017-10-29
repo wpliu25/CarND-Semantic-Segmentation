@@ -124,11 +124,15 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     cross_entropy_loss = tf.reduce_mean(
         tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
 
+    reg_loss = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)
+    reg_constant = 0.01
+    loss_fn = cross_entropy_loss + reg_constant* tf.reduce_sum(reg_loss)
+
     optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate)
 
-    train_op = optimizer.minimize(loss=cross_entropy_loss)
+    train_op = optimizer.minimize(loss=loss_fn)
 
-    return logits, train_op, cross_entropy_loss
+    return logits, train_op, loss_fn
 tests.test_optimize(optimize)
 
 
@@ -205,7 +209,7 @@ def run():
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
         # TODO: Build NN using load_vgg, layers, and optimize function
-        epochs = 200
+        epochs = 35
         batch_size = 5
         correct_label = tf.placeholder(tf.int32,
                                        [None, None, None, num_classes],
