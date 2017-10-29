@@ -1,0 +1,39 @@
+train_nn starting...
+
+EPOCH 1/35 | Time: 34.018 sec | Start Loss: 1.675 to End Loss: 0.224
+EPOCH 2/35 | Time: 31.283 sec | Start Loss: 0.232 to End Loss: 0.142
+EPOCH 3/35 | Time: 31.434 sec | Start Loss: 0.156 to End Loss: 0.113
+EPOCH 4/35 | Time: 31.342 sec | Start Loss: 0.109 to End Loss: 0.077
+EPOCH 5/35 | Time: 31.387 sec | Start Loss: 0.083 to End Loss: 0.091
+EPOCH 6/35 | Time: 31.320 sec | Start Loss: 0.103 to End Loss: 0.106
+EPOCH 7/35 | Time: 31.320 sec | Start Loss: 0.088 to End Loss: 0.067
+EPOCH 8/35 | Time: 31.345 sec | Start Loss: 0.071 to End Loss: 0.099
+EPOCH 9/35 | Time: 31.253 sec | Start Loss: 0.063 to End Loss: 0.056
+EPOCH 10/35 | Time: 31.449 sec | Start Loss: 0.037 to End Loss: 0.040
+EPOCH 11/35 | Time: 31.310 sec | Start Loss: 0.054 to End Loss: 0.050
+EPOCH 12/35 | Time: 31.248 sec | Start Loss: 0.056 to End Loss: 0.041
+EPOCH 13/35 | Time: 31.251 sec | Start Loss: 0.042 to End Loss: 0.052
+EPOCH 14/35 | Time: 31.323 sec | Start Loss: 0.031 to End Loss: 0.023
+EPOCH 15/35 | Time: 31.322 sec | Start Loss: 0.037 to End Loss: 0.047
+EPOCH 16/35 | Time: 31.264 sec | Start Loss: 0.031 to End Loss: 0.042
+EPOCH 17/35 | Time: 31.253 sec | Start Loss: 0.052 to End Loss: 0.031
+EPOCH 18/35 | Time: 31.248 sec | Start Loss: 0.030 to End Loss: 0.024
+EPOCH 19/35 | Time: 31.197 sec | Start Loss: 0.038 to End Loss: 0.061
+EPOCH 20/35 | Time: 31.406 sec | Start Loss: 0.023 to End Loss: 0.049
+EPOCH 21/35 | Time: 31.653 sec | Start Loss: 0.036 to End Loss: 0.051
+EPOCH 22/35 | Time: 31.314 sec | Start Loss: 0.041 to End Loss: 0.043
+EPOCH 23/35 | Time: 31.590 sec | Start Loss: 0.049 to End Loss: 0.032
+EPOCH 24/35 | Time: 31.428 sec | Start Loss: 0.022 to End Loss: 0.032
+EPOCH 25/35 | Time: 31.416 sec | Start Loss: 0.033 to End Loss: 0.024
+EPOCH 26/35 | Time: 31.449 sec | Start Loss: 0.031 to End Loss: 0.029
+EPOCH 27/35 | Time: 31.229 sec | Start Loss: 0.036 to End Loss: 0.030
+EPOCH 28/35 | Time: 31.440 sec | Start Loss: 0.028 to End Loss: 0.022
+EPOCH 29/35 | Time: 31.280 sec | Start Loss: 0.023 to End Loss: 0.029
+EPOCH 30/35 | Time: 31.418 sec | Start Loss: 0.023 to End Loss: 0.027
+EPOCH 31/35 | Time: 31.536 sec | Start Loss: 0.026 to End Loss: 0.022
+EPOCH 32/35 | Time: 31.400 sec | Start Loss: 0.014 to End Loss: 0.028
+EPOCH 33/35 | Time: 31.232 sec | Start Loss: 0.030 to End Loss: 0.027
+EPOCH 34/35 | Time: 31.173 sec | Start Loss: 0.022 to End Loss: 0.018
+EPOCH 35/35 | Time: 31.226 sec | Start Loss: 0.024 to End Loss: 0.030
+
+train_nn complete...
