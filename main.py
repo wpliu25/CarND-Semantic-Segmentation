@@ -77,13 +77,13 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
     # layer7 to 4 skip layer
     layer4_out = tf.add(layer7_upsample, layer4_conv_1x1)
 
-    # layer4: 1x1 conv, padding same
+    # layer4: decov, transpose, upsamples by 2
     layer4_upsample = tf.layers.conv2d_transpose(layer4_out,
       num_classes, 4, 2,
       padding='same',
       kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
-    # layer3: decov, transpose, upsamples by 2
+    # layer3: 1x1 conv, padding same
     layer3_conv_1x1 = tf.layers.conv2d(vgg_layer3_out,
       num_classes, 1,
       padding='same',
@@ -94,7 +94,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # last: decov, transpose, upsamples by 2
     nn_last_layer = tf.layers.conv2d_transpose(layer3_out,
-      num_classes, 4, 2,
+      num_classes, 16, 8,
       padding='same',
       kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
     return nn_last_layer
