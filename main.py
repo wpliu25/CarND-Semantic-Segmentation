@@ -2,6 +2,7 @@ import os.path
 import tensorflow as tf
 import helper
 import warnings
+import time
 from distutils.version import LooseVersion
 import project_tests as tests
 
@@ -65,7 +66,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # layer7: decov, transpose, upsamples by 2
     layer7_upsample = tf.layers.conv2d_transpose(layer7_conv_1x1,
-      num_classes, 4, strides=(2, 2),
+      num_classes, 5, strides=(2, 2),
       padding='same',
       kernel_initializer=tf.random_normal_initializer(stddev=0.01),
       kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
@@ -82,7 +83,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # layer4: decov, transpose, upsamples by 2
     layer4_upsample = tf.layers.conv2d_transpose(layer4_out,
-      num_classes, 4, strides=(2, 2),
+      num_classes, 5, strides=(2, 2),
       padding='same',
       kernel_initializer=tf.random_normal_initializer(stddev=0.01),
       kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
@@ -149,17 +150,34 @@ def train_nn(sess, epochs, batch_size, get_batches_fn, train_op, cross_entropy_l
     # TODO: Implement function
     sess.run(tf.global_variables_initializer())
 
+    out_file = open("output.txt", 'w')
+
     print("train_nn starting...")
+    out_file.write("train_nn starting...\n\n")
     print()
     for i in range(epochs):
-      print("EPOCH {} ...".format(i+1))
+      start_time = time.clock()
+      print("EPOCH {}/{} ...".format(i+1, epochs))
+      start_loss = -1
       for image, label in get_batches_fn(batch_size):
         _, loss = sess.run([train_op, cross_entropy_loss],
                            feed_dict={input_image: image, correct_label: label,
-                                      keep_prob: 0.5, learning_rate: 0.0009})
+                                      keep_prob: 0.5, learning_rate: 1e-4})
+        if start_loss == -1:
+          start_loss = loss
         print("Loss: = {:.3f}".format(loss))
+      end_time = time.clock()
+      print("EPOCH {}/{} | Time: {:.3f} sec | Start Loss: {:.3f} to End Loss: {"
+            ":.3f}".format(i+1, epochs, end_time-start_time, start_loss,
+                       loss))
+      out_file.write("EPOCH {}/{} | Time: {:.3f} sec | Start Loss: {:.3f} to "
+                    "End Loss: {"
+            ":.3f}\n".format(i+1, epochs, end_time-start_time, start_loss,
+                       loss))
     print()
     print("train_nn complete...")
+    out_file.write("\ntrain_nn complete...\n")
+    out_file.close()
 tests.test_train_nn(train_nn)
 
 
@@ -187,7 +205,7 @@ def run():
         #  https://datascience.stackexchange.com/questions/5224/how-to-prepare-augment-images-for-neural-network
 
         # TODO: Build NN using load_vgg, layers, and optimize function
-        epochs = 50
+        epochs = 200
         batch_size = 5
         correct_label = tf.placeholder(tf.int32,
                                        [None, None, None, num_classes],
