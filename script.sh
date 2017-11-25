@@ -10,3 +10,4 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/devsystem/dependencies/ubuntu16/cuda/cu
 protoc object_detection/protos/*.proto --python_out=.
 # From tensorflow/models/research/
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
+download.virtualbox.org/virtualbox/5.0.40
